@@ -1,4 +1,4 @@
-
+//// SPDX-INDENTIFIER: MIT
 pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -22,7 +22,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   bool public isPublicSaleActive = false;
   bool public revealed = false;
 
-  address public thecolorsaddress = 0x3328358128832A260C76A4141e19E2A943CD4B6D; 
+  address public thecolorsaddress = 0xb27A31f1b0AF2946B7F582768f03239b1eC07c2c; 
   theColors thecolorscontract = theColors(thecolorsaddress);  
   mapping(uint256 => bool) public hasClaimed;
 
@@ -34,12 +34,9 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   ) ERC721(_name, _symbol) {
     setBaseURI(_initBaseURI);
     setNotRevealedURI(_initNotRevealedUri);
+    _safeMint(msg.sender, 0);
+    hasClaimed[0] = true;
   }
-  /*
-    check if paused
-    max supply
-    check corrrect  value
-  */
 
   // presale 
   function _presaleSingleMint(uint256 tokenId) public payable {
@@ -68,8 +65,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
     require(_mintAmount <= maxMintAmount, "max mint amount per tx exceeded");
     require(isPublicSaleActive, "Public sale isn't active yet!");
     for (uint256 i = 1; i <= _mintAmount; i++) {
-      _safeMint(msg.sender, totalMinted + 1);
-      totalMinted = totalMinted + 1;
+      _safeMint(msg.sender, getNextUnmintedToken());
     }
   }
 
@@ -110,8 +106,8 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
 
   //only owner
 
-  function setPublicSaleIsActive(bool isActive) public onlyOwner {
-      isPublicSaleActive = isActive;
+  function togglePublicSale() public onlyOwner {
+      isPublicSaleActive = !isPublicSaleActive;
   }
 
   function reveal() public onlyOwner {
@@ -191,10 +187,12 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
       return tokenIds;
     }
 
-    function getNextUnmintedToken() public view returns (uint256 nextTokenId){
-      for(uint256 i = 0; i < totalSupply(); i++)
-        if(!hasClaimed[i]) return i;
-    }
+  function getNextUnmintedToken() public view returns (uint256 nextTokenId){
+    for(uint256 i = 0; i <= 4317; i++)
+      if(hasClaimed[i] != true) return i;
+  }
+
+  
 
   // internal
   function _baseURI() internal view virtual override returns (string memory) {
