@@ -22,7 +22,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   bool public isPublicSaleActive = false;
   bool public revealed = false;
 
-  address public thecolorsaddress = 0xd9145CCE52D386f254917e481eB44e9943F39138; 
+  address public thecolorsaddress = 0x3328358128832A260C76A4141e19E2A943CD4B6D; 
   theColors thecolorscontract = theColors(thecolorsaddress);  
   mapping(uint256 => bool) public hasClaimed;
 
@@ -35,23 +35,26 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
     setBaseURI(_initBaseURI);
     setNotRevealedURI(_initNotRevealedUri);
   }
-
- 
+  /*
+    check if paused
+    max supply
+    check corrrect  value
+  */
 
   // presale 
   function _presaleSingleMint(uint256 tokenId) public payable {
-    require(totalMinted + 1 <= maxSupply, "max NFT limit exceeded");
+    require(!paused, "Contracts paused!");
+    require(totalMinted + 1 <= maxSupply, "max supply has been reached");
     require(msg.value >= cost, "insufficient funds");
     require(thecolorscontract.ownerOf(tokenId) == msg.sender, "not the owner of this color!");
     require(!hasClaimed[tokenId], "already minted with this token!!");
-    require(!paused, "Contracts paused!");
     _safeMint(msg.sender, totalMinted + 1);
     hasClaimed[tokenId] = true;
     totalMinted++;
   }
 
 
-  function mintBatch(uint256[] memory tokenIds) public {
+  function _presaleBatchMint(uint256[] memory tokenIds) public {
       for (uint256 i = 0; i < tokenIds.length; i++) {
         _presaleSingleMint(tokenIds[i]);
       }
@@ -60,15 +63,13 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   // public
   function mint(uint256 _mintAmount) public payable {
     require(!paused, "the contract is paused");
-    require(_mintAmount > 0, "need to mint at least 1 NFT");
-    require(_mintAmount <= maxMintAmount, "max mint amount per session exceeded");
-    require(totalMinted + _mintAmount <= maxSupply, "max NFT limit exceeded");
+    require(totalMinted + _mintAmount <= maxSupply, "max supply has been reached");
     require(msg.value >= cost * _mintAmount, "insufficient funds");
+    require(_mintAmount <= maxMintAmount, "max mint amount per tx exceeded");
     require(isPublicSaleActive, "Public sale isn't active yet!");
-
     for (uint256 i = 1; i <= _mintAmount; i++) {
-      _safeMint(msg.sender, totalMinted + i);
-      totalMinted++;
+      _safeMint(msg.sender, totalMinted + 1);
+      totalMinted = totalMinted + 1;
     }
   }
 
@@ -103,11 +104,16 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
 
     string memory currentBaseURI = _baseURI();
     return bytes(currentBaseURI).length > 0
-        ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension))
+        ? string(abi.encodePacked(currentBaseURI, "/", tokenId.toString(), baseExtension))
         : "";
   }
 
   //only owner
+
+  function setPublicSaleIsActive(bool isActive) public onlyOwner {
+      isPublicSaleActive = isActive;
+  }
+
   function reveal() public onlyOwner {
       revealed = true;
   }
