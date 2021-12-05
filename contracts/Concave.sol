@@ -48,9 +48,9 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
     require(msg.value >= cost, "insufficient funds");
     require(thecolorscontract.ownerOf(tokenId) == msg.sender, "not the owner of this color!");
     require(!hasClaimed[tokenId], "already minted with this token!!");
-    _safeMint(msg.sender, totalMinted + 1);
     hasClaimed[tokenId] = true;
     totalMinted++;
+    _safeMint(msg.sender, tokenId);
   }
 
 
