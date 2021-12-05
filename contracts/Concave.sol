@@ -1,0 +1,192 @@
+
+pragma solidity >=0.7.0 <0.9.0;
+
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+interface theColors{
+  function ownerOf (uint256 tokenid) external view returns (address);
+}
+
+contract ConcaveNFT is ERC721Enumerable, Ownable {
+  using Strings for uint256;
+
+  string public baseURI;
+  string public baseExtension = ".json";
+  string public notRevealedUri;
+  uint256 public cost = 0 ether;
+  uint256 public totalMinted = 0;
+  uint256 public maxSupply = 4317;
+  uint256 public maxMintAmount = 10;
+  bool public paused = false;
+  bool public isPublicSaleActive = false;
+  bool public revealed = false;
+
+  address public thecolorsaddress = 0xd9145CCE52D386f254917e481eB44e9943F39138; 
+  theColors thecolorscontract = theColors(thecolorsaddress);  
+  mapping(uint256 => bool) public hasClaimed;
+
+  constructor(
+    string memory _name,
+    string memory _symbol,
+    string memory _initBaseURI,
+    string memory _initNotRevealedUri
+  ) ERC721(_name, _symbol) {
+    setBaseURI(_initBaseURI);
+    setNotRevealedURI(_initNotRevealedUri);
+  }
+
+  //Spirals claim function
+   function getColorsOwnedByUser(address user) public view returns (uint256[] memory tokenIdsList) {
+      uint256[] memory tokenIds = new uint256[](4317);
+
+      uint index = 0;
+      for (uint i = 0; i < 4317; i++) {
+        address tokenOwner = thecolorscontract.ownerOf(i);
+        
+        if (user == tokenOwner) {
+          tokenIds[index] = i;
+          index += 1;
+        }
+      }
+
+      uint left = 4317 - index;
+      for (uint i = 0; i < left; i++) {
+        tokenIds[index] = 9999;
+        index += 1;
+      }
+
+      return tokenIds;
+    }
+
+    function getUnmintedSpiralsByUser(address user) public view returns (uint256[] memory tokenIdsList) {
+      uint256[] memory tokenIds = new uint256[](4317);
+
+      uint index = 0;
+      for (uint i = 0; i < 4317; i++) {
+        address tokenOwner = thecolorscontract.ownerOf(i);
+        
+        if (user == tokenOwner && !hasClaimed[i]) {
+          tokenIds[index] = i;
+          index += 1;
+        }
+      }
+
+      uint left = 4317 - index;
+      for (uint i = 0; i < left; i++) {
+        tokenIds[index] = 9999;
+        index += 1;
+      }
+
+      return tokenIds;
+    }
+
+  // internal
+  function _baseURI() internal view virtual override returns (string memory) {
+    return baseURI;
+  }
+
+  // presale 
+  function _presaleSingleMint(uint256 tokenId) public payable {
+    require(totalMinted + 1 <= maxSupply, "max NFT limit exceeded");
+    require(msg.value >= cost, "insufficient funds");
+    require(thecolorscontract.ownerOf(tokenId) == msg.sender, "not the owner of this color!");
+    require(!hasClaimed[tokenId], "already minted with this token!!");
+    require(!paused, "Contracts paused!");
+    _safeMint(msg.sender, totalMinted + 1);
+    hasClaimed[tokenId] = true;
+    totalMinted++;
+  }
+
+
+  function mintBatch(uint256[] memory tokenIds) public {
+      for (uint256 i = 0; i < tokenIds.length; i++) {
+        _presaleSingleMint(tokenIds[i]);
+      }
+    }
+
+
+
+  // public
+  function mint(uint256 _mintAmount) public payable {
+    require(!paused, "the contract is paused");
+    require(_mintAmount > 0, "need to mint at least 1 NFT");
+    require(_mintAmount <= maxMintAmount, "max mint amount per session exceeded");
+    require(totalMinted + _mintAmount <= maxSupply, "max NFT limit exceeded");
+    require(msg.value >= cost * _mintAmount, "insufficient funds");
+    require(isPublicSaleActive, "Public sale isn't active yet!");
+
+    for (uint256 i = 1; i <= _mintAmount; i++) {
+      _safeMint(msg.sender, totalMinted + i);
+      totalMinted++;
+    }
+  }
+
+  function walletOfOwner(address _owner)
+    public
+    view
+    returns (uint256[] memory)
+  {
+    uint256 ownerTokenCount = balanceOf(_owner);
+    uint256[] memory tokenIds = new uint256[](ownerTokenCount);
+    for (uint256 i; i < ownerTokenCount; i++) {
+      tokenIds[i] = tokenOfOwnerByIndex(_owner, i);
+    }
+    return tokenIds;
+  }
+
+  function tokenURI(uint256 tokenId)
+    public
+    view
+    virtual
+    override
+    returns (string memory)
+  {
+    require(
+      _exists(tokenId),
+      "ERC721Metadata: URI query for nonexistent token"
+    );
+    
+    if(revealed == false) {
+        return notRevealedUri;
+    }
+
+    string memory currentBaseURI = _baseURI();
+    return bytes(currentBaseURI).length > 0
+        ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension))
+        : "";
+  }
+
+  //only owner
+  function reveal() public onlyOwner {
+      revealed = true;
+  }
+  
+  function setCost(uint256 _newCost) public onlyOwner {
+    cost = _newCost;
+  }
+
+  function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner {
+    maxMintAmount = _newmaxMintAmount;
+  }
+
+  function setBaseURI(string memory _newBaseURI) public onlyOwner {
+    baseURI = _newBaseURI;
+  }
+
+  function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
+    baseExtension = _newBaseExtension;
+  }
+  
+  function setNotRevealedURI(string memory _notRevealedURI) public onlyOwner {
+    notRevealedUri = _notRevealedURI;
+  }
+
+  function pause(bool _state) public onlyOwner {
+    paused = _state;
+  }
+  
+  function withdraw() public payable onlyOwner {
+    payable(msg.sender).transfer(address(this).balance);
+  }
+}
