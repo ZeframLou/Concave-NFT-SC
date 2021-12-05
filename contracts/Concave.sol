@@ -191,6 +191,11 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
       return tokenIds;
     }
 
+    function getNextUnmintedToken() public view returns (uint256 nextTokenId){
+      for(uint256 i = 0; i < totalSupply(); i++)
+        if(!hasClaimed[i]) return i;
+    }
+
   // internal
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
