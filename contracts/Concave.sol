@@ -36,55 +36,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
     setNotRevealedURI(_initNotRevealedUri);
   }
 
-  //Spirals claim function
-   function getColorsOwnedByUser(address user) public view returns (uint256[] memory tokenIdsList) {
-      uint256[] memory tokenIds = new uint256[](4317);
-
-      uint index = 0;
-      for (uint i = 0; i < 4317; i++) {
-        address tokenOwner = thecolorscontract.ownerOf(i);
-        
-        if (user == tokenOwner) {
-          tokenIds[index] = i;
-          index += 1;
-        }
-      }
-
-      uint left = 4317 - index;
-      for (uint i = 0; i < left; i++) {
-        tokenIds[index] = 9999;
-        index += 1;
-      }
-
-      return tokenIds;
-    }
-
-    function getUnmintedSpiralsByUser(address user) public view returns (uint256[] memory tokenIdsList) {
-      uint256[] memory tokenIds = new uint256[](4317);
-
-      uint index = 0;
-      for (uint i = 0; i < 4317; i++) {
-        address tokenOwner = thecolorscontract.ownerOf(i);
-        
-        if (user == tokenOwner && !hasClaimed[i]) {
-          tokenIds[index] = i;
-          index += 1;
-        }
-      }
-
-      uint left = 4317 - index;
-      for (uint i = 0; i < left; i++) {
-        tokenIds[index] = 9999;
-        index += 1;
-      }
-
-      return tokenIds;
-    }
-
-  // internal
-  function _baseURI() internal view virtual override returns (string memory) {
-    return baseURI;
-  }
+ 
 
   // presale 
   function _presaleSingleMint(uint256 tokenId) public payable {
@@ -104,8 +56,6 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
         _presaleSingleMint(tokenIds[i]);
       }
     }
-
-
 
   // public
   function mint(uint256 _mintAmount) public payable {
@@ -189,4 +139,55 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   function withdraw() public payable onlyOwner {
     payable(msg.sender).transfer(address(this).balance);
   }
+
+   //internal
+   function getColorsOwnedByUser(address user) public view returns (uint256[] memory tokenIdsList) {
+      uint256[] memory tokenIds = new uint256[](4317);
+
+      uint index = 0;
+      for (uint i = 0; i < 4317; i++) {
+        address tokenOwner = thecolorscontract.ownerOf(i);
+        
+        if (user == tokenOwner) {
+          tokenIds[index] = i;
+          index += 1;
+        }
+      }
+
+      uint left = 4317 - index;
+      for (uint i = 0; i < left; i++) {
+        tokenIds[index] = 9999;
+        index += 1;
+      }
+
+      return tokenIds;
+    }
+
+    function getUnmintedSpiralsByUser(address user) public view returns (uint256[] memory tokenIdsList) {
+      uint256[] memory tokenIds = new uint256[](4317);
+
+      uint index = 0;
+      for (uint i = 0; i < 4317; i++) {
+        address tokenOwner = thecolorscontract.ownerOf(i);
+        
+        if (user == tokenOwner && !hasClaimed[i]) {
+          tokenIds[index] = i;
+          index += 1;
+        }
+      }
+
+      uint left = 4317 - index;
+      for (uint i = 0; i < left; i++) {
+        tokenIds[index] = 9999;
+        index += 1;
+      }
+
+      return tokenIds;
+    }
+
+  // internal
+  function _baseURI() internal view virtual override returns (string memory) {
+    return baseURI;
+  }
+
 }
