@@ -96,18 +96,22 @@ describe("ConcaveNFT", function () {
     ).to.be.revertedWith(`Public sale isn't active yet!`);
   })
 
-  // it("should return colors owned by user (getColorsOwnedByUser)", async () => {
-  //   // this.timeout(100000);
-  //   let m = await concavenft.getColorsOwnedByUser(colorsOwner);
-  //   // console.log(m)
-  //   expect(m[0]).to.equal("1");
-  //   // done();
-  // }).timeout(0);
+  it("should return colors owned by user (getColorsOwnedByUser)", async () => {
+    // this.timeout(100000);
+    let m = await concavenft.getColorsOwnedByUser(colorsOwner);
+    // console.log(m)
+    expect(m[0]).to.equal("1");
+    // done();
+  }).timeout(0);
 
 
-  it("should not be able to mint [ mint() ]", async () => {
-    await concavenft.connect(colorsOwnerSigner)._presaleSingleMint(51)
-  })
+  // it("should not be able to mint [ mint() ]", async () => {
+  //   await concavenft.connect(colorsOwnerSigner)._presaleSingleMint(51)
+  //
+  //   await expect(
+  //       concavenft.mint(1)
+  //   ).to.be.revertedWith(`Public sale isn't active yet!`);
+  // })
 
 
 });
