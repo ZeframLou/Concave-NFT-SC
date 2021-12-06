@@ -22,8 +22,8 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   bool public isPublicSaleActive = false;
   bool public revealed = false;
 
-  address public thecolorsaddress = 0x5e17b14ADd6c386305A32928F985b29bbA34Eff5; 
-  theColors thecolorscontract = theColors(thecolorsaddress);  
+  address public thecolorsaddress = 0x9fdb31F8CE3cB8400C7cCb2299492F2A498330a4; 
+  theColors thecolorscontract = theColors(thecolorsaddress);
   mapping(uint256 => bool) public hasClaimed;
 
   constructor(
@@ -38,7 +38,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
     hasClaimed[0] = true;
   }
 
-  // presale 
+  // presale
   function _presaleSingleMint(uint256 tokenId) public payable {
     require(!paused, "Contracts paused!");
     require(totalMinted + 1 <= maxSupply, "max supply has been reached");
@@ -94,7 +94,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
       _exists(tokenId),
       "ERC721Metadata: URI query for nonexistent token"
     );
-    
+
     if(revealed == false) {
         return notRevealedUri;
     }
@@ -114,7 +114,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   function reveal() public onlyOwner {
       revealed = true;
   }
-  
+
   function setCost(uint256 _newCost) public onlyOwner {
     cost = _newCost;
   }
@@ -130,7 +130,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
     baseExtension = _newBaseExtension;
   }
-  
+
   function setNotRevealedURI(string memory _notRevealedURI) public onlyOwner {
     notRevealedUri = _notRevealedURI;
   }
@@ -138,7 +138,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   function pause(bool _state) public onlyOwner {
     paused = _state;
   }
-  
+
   function withdraw() public payable onlyOwner {
     payable(msg.sender).transfer(address(this).balance);
   }
@@ -150,7 +150,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
       uint index = 0;
       for (uint i = 0; i < 4317; i++) {
         address tokenOwner = thecolorscontract.ownerOf(i);
-        
+
         if (user == tokenOwner) {
           tokenIds[index] = i;
           index += 1;
@@ -172,7 +172,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
       uint index = 0;
       for (uint i = 0; i < 4317; i++) {
         address tokenOwner = thecolorscontract.ownerOf(i);
-        
+
         if (user == tokenOwner && hasClaimed[i] != true) {
           tokenIds[index] = i;
           index += 1;
@@ -193,7 +193,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
       if(hasClaimed[i] != true) return i;
   }
 
-  
+
 
   // internal
   function _baseURI() internal view virtual override returns (string memory) {

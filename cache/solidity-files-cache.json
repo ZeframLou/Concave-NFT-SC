@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/contracts/Concave.sol": {
-      "lastModificationDate": 1638790971102,
-      "contentHash": "dba8db61628e5bf948b512774794e43d",
+      "lastModificationDate": 1638792139131,
+      "contentHash": "5fbbe6e5ebcf3f23163e499ecaf3be10",
       "sourceName": "contracts/Concave.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -479,6 +479,151 @@
       ],
       "artifacts": [
         "IERC165"
+      ]
+    },
+    "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/contracts/colors/base64.sol": {
+      "lastModificationDate": 1638792179353,
+      "contentHash": "e83c1b127e86a55e7d40638244fdeda5",
+      "sourceName": "contracts/colors/base64.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
+      "artifacts": [
+        "Base64"
+      ]
+    },
+    "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/contracts/colors/TheColors.sol": {
+      "lastModificationDate": 1638792179358,
+      "contentHash": "32816ac904083a721b92bde14c87ff4b",
+      "sourceName": "contracts/colors/TheColors.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
+        "./base64.sol",
+        "./INFTOwner.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "TheColors"
+      ]
+    },
+    "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/contracts/colors/INFTOwner.sol": {
+      "lastModificationDate": 1638792179356,
+      "contentHash": "ebc1782a3c5ac59f1415ae1acb2150ee",
+      "sourceName": "contracts/colors/INFTOwner.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "INFTOwner"
+      ]
+    },
+    "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1638791027569,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
       ]
     }
   }
