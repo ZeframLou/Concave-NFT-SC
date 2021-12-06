@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require("hardhat-gas-reporter");
 require('dotenv').config();
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -18,6 +19,11 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
+//     gasReporter: {
+//     currency: 'USD',
+//     gasPrice: 80,
+//     gasPriceApi:'https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
+// },
   networks: {
  /* rinkeby: {
     url: "https://eth-rinkeby.alchemyapi.io/v2/123abc123abc123abc123abc123abcde",

@@ -15,7 +15,7 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
     string public baseURI;
     string public notRevealedUri;
     uint256 public maxSupply = 4317;
-    uint256 public maxMintAmount;
+    uint256 public maxMintAmount = 10;
     uint256 public price = 0.03 ether;
     bool public revealed = false;
 

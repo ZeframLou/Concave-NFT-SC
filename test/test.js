@@ -33,7 +33,7 @@ describe("ConcaveNFT", function () {
   });
 
   it("ConcaveNFT should mint", async function () {
-    await concavenft.tokenByIndex(1);
+    await concavenft.mint(1);
   });
 
   // it("ConcaveNFT should get URI", async function () {
