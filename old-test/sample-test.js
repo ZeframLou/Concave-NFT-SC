@@ -5,7 +5,7 @@ describe("ConcaveNFT", function () {
   let ConcaveNFT
   const _name = "name"
   const _symbol = "symbol"
-  const _initBaseURI = "_initBaseURI"
+  const _initBaseURI = "https://gateway.pinata.cloud/ipfs/QmXytj58vtcvm9SwwBPvJykApcsr9aeChX4BcRha2wc31i"
   const _initNotRevealedUri = "_initNotRevealedUri"
 
   const colorsOwner = "0xfA8F061675f46CB9e71308BDf3C1C15E35011AC2"
@@ -96,22 +96,24 @@ describe("ConcaveNFT", function () {
     ).to.be.revertedWith(`Public sale isn't active yet!`);
   })
 
-  it("should return colors owned by user (getColorsOwnedByUser)", async () => {
-    // this.timeout(100000);
-    let m = await concavenft.getColorsOwnedByUser(colorsOwner);
-    // console.log(m)
-    expect(m[0]).to.equal("1");
-    // done();
-  }).timeout(0);
+  // it("should return colors owned by user (getColorsOwnedByUser)", async () => {
+  //   // this.timeout(100000);
+  //   let m = await concavenft.getColorsOwnedByUser(colorsOwner);
+  //   // console.log(m)
+  //   expect(m[0]).to.equal("1");
+  //   // done();
+  // }).timeout(0);
 
 
-  // it("should not be able to mint [ mint() ]", async () => {
-  //   await concavenft.connect(colorsOwnerSigner)._presaleSingleMint(51)
-  //
-  //   await expect(
-  //       concavenft.mint(1)
-  //   ).to.be.revertedWith(`Public sale isn't active yet!`);
-  // })
+  it("should not be able to mint [ mint() ]", async () => {
+    await concavenft.connect(colorsOwnerSigner).presaleSingleMint(1)
+    await concavenft.reveal();
+    let m = await concavenft.tokenURI(1);
+    console.log(m)
+    // await expect(
+    //     concavenft.mint(1)
+    // ).to.be.revertedWith(`Public sale isn't active yet!`);
+  })
 
 
 });
