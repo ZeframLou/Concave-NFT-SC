@@ -11,10 +11,8 @@ describe("ConcaveNFT", function () {
   const colorsOwner = "0xfA8F061675f46CB9e71308BDf3C1C15E35011AC2"
   const colorsAddress = "0x9fdb31F8CE3cB8400C7cCb2299492F2A498330a4"
 
-  let thecolors;
   let deployer;
   let concavenft;
-  let colorsOwnerSigner;
 
 
 
@@ -32,18 +30,18 @@ describe("ConcaveNFT", function () {
         _initBaseURI,
         _initNotRevealedUri
     );
-
   });
 
   it("ConcaveNFT should mint", async function () {
-    await concavenft.mint(1);
+    await concavenft.tokenByIndex(1);
   });
 
-  it("ConcaveNFT should get URI", async function () {
-    let uri = await concavenft.tokenURI(0);
-    console.log('uri')
-    console.log(uri)
-  });
+  // it("ConcaveNFT should get URI", async function () {
+  //   let uri = await concavenft.tokenURI(1);
+  //   await expect(
+  //       concavenft.mint(1)
+  //   ).to.be.revertedWith(`Public sale isn't active yet!`);
+  // });
 
 
 });
