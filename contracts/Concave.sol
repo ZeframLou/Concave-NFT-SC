@@ -38,7 +38,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
     }
 
     // presale
-    function _presaleSingleMint(uint256 tokenId) public payable {
+    function presaleSingleMint(uint256 tokenId) public payable {
         require(!paused, "Contracts paused!");
         require(totalMinted + 1 <= maxSupply, "max supply has been reached");
         require(msg.value >= cost, "insufficient funds");
@@ -50,9 +50,9 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
     }
 
 
-    function _presaleBatchMint(uint256[] memory tokenIds) public {
+    function presaleBatchMint(uint256[] memory tokenIds) public {
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            _presaleSingleMint(tokenIds[i]);
+            presaleSingleMint(tokenIds[i]);
         }
     }
 
