@@ -12,6 +12,14 @@ describe("ConcaveNFT", function () {
   const colorsAddress = "0x9fdb31F8CE3cB8400C7cCb2299492F2A498330a4"
 
   let thecolors;
+  let deployer
+
+
+
+  it("gets signers", async () => {
+    const [d, _] = await ethers.getSigners();
+    deployer = d
+  })
 
   it("Locates Original TheColors NFT", async () => {
     const TheColors = await ethers.getContractFactory("TheColors");
@@ -24,10 +32,26 @@ describe("ConcaveNFT", function () {
     expect(totalSupply).to.equal(4317);
   })
 
-  // it("Impersonates Account", async () => {
-  //   const admin = await ethers.provider.getSigner(colorsOwner);
-  //   const TheColorsNFT = await ethers.getContractAt('TheColors', vppAddress, admin);
-  // });
+  it("Impersonator is owner of token 0", async () => {
+    const oo = await thecolors.ownerOf(0)
+    // console.log({totalSupply})
+    expect(oo).to.equal(colorsOwner);
+  })
+
+  it("Impersonates Account", async () => {
+    // const admin =
+    await hre.network.provider.request({
+      method: "hardhat_impersonateAccount",
+      params: [colorsOwner],
+    });
+    await network.provider.send("hardhat_setBalance", [
+      colorsOwner,
+      ethers.utils.parseEther('10.0').toHexString().replace("0x0", "0x"),
+    ]);
+    const signer = await ethers.provider.getSigner(colorsOwner);
+    // console.log(thecolors)
+    await thecolors.connect(signer).transferFrom(colorsOwner,deployer.address,0)
+  });
 
   it("ConcaveNFT should deploy", async function () {
     ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
