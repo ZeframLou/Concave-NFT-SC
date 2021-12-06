@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/contracts/Concave.sol": {
-      "lastModificationDate": 1638803607237,
-      "contentHash": "ec0b6920e22103fd9c219ecf753022cf",
+      "lastModificationDate": 1638803680475,
+      "contentHash": "58958930a4d71f9b5cc5a71afabf055e",
       "sourceName": "contracts/Concave.sol",
       "solcConfig": {
         "version": "0.8.4",
