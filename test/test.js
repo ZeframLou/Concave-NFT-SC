@@ -1,11 +1,11 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers, waffle } = require("hardhat");
 
 describe("ConcaveNFT", function () {
 
   const _name = "name"
   const _symbol = "symbol"
-  const _initBaseURI = "https://gateway.pinata.cloud/ipfs/QmXytj58vtcvm9SwwBPvJykApcsr9aeChX4BcRha2wc31i/"
+  const _initBaseURI = "ipfs://QmXytj58vtcvm9SwwBPvJykApcsr9aeChX4BcRha2wc31i/"
   const _initNotRevealedUri = "ipfs://QmYJJDthYUGV57FQ57VCeXcCBnpWoGjxtHsWcDLEY1Bp19"
 
   const maxSupply = 4317;
@@ -201,7 +201,6 @@ describe("ConcaveNFT", function () {
       })
 
 
-
       describe("reveal()",() => {
           beforeEach(async function () {
               [deployer, thirdParty] = await ethers.getSigners();
@@ -235,6 +234,235 @@ describe("ConcaveNFT", function () {
               expect(await concavenft.tokenURI(0)).to.equal(`${_initBaseURI}0.json`)
           })
       })
+
+      describe("unpause()",() => {
+          beforeEach(async function () {
+              [deployer, thirdParty] = await ethers.getSigners();
+            // Get the ContractFactory and Signers here.
+            // console.log('before')
+            ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
+            concavenft = await ConcaveNFT.deploy(
+                _name,
+                _symbol,
+                _initBaseURI,
+                _initNotRevealedUri
+            );
+          });
+          it(`Third Party must not be able to call unpause()`, async () => {
+              await expect(
+                  concavenft.connect(thirdParty).unpause()
+              ).to.be.revertedWith(`Ownable: caller is not the owner'`);
+          })
+          it(`Owner must be able to call unpause()`, async () => {
+              await concavenft.unpause()
+          })
+      })
+      describe("pause()",() => {
+          beforeEach(async function () {
+              [deployer, thirdParty] = await ethers.getSigners();
+            // Get the ContractFactory and Signers here.
+            // console.log('before')
+            ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
+            concavenft = await ConcaveNFT.deploy(
+                _name,
+                _symbol,
+                _initBaseURI,
+                _initNotRevealedUri
+            );
+          });
+          it(`Third Party must not be able to call pause()`, async () => {
+              await concavenft.unpause()
+              await expect(
+                  concavenft.connect(thirdParty).pause()
+              ).to.be.revertedWith(`Ownable: caller is not the owner'`);
+          })
+          it(`Owner must be able to call pause()`, async () => {
+              await concavenft.unpause()
+              await concavenft.pause()
+          })
+          it(`When paused, minting shouldnt be allowed, when unpaused minting should`, async () => {
+              await concavenft.unpause()
+              await concavenft.mint(10)
+              await concavenft.pause()
+              await expect(
+                  concavenft.mint(1)
+              ).to.be.revertedWith(`Pausable: paused`);
+          })
+      })
+
+      describe("withdraw()",() => {
+          beforeEach(async function () {
+              [deployer, thirdParty] = await ethers.getSigners();
+            // Get the ContractFactory and Signers here.
+            // console.log('before')
+            ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
+            concavenft = await ConcaveNFT.deploy(
+                _name,
+                _symbol,
+                _initBaseURI,
+                _initNotRevealedUri
+            );
+          });
+          it(`Third Party must not be able to call unpause()`, async () => {
+              await expect(
+                  concavenft.connect(thirdParty).withdraw()
+              ).to.be.revertedWith(`Ownable: caller is not the owner'`);
+          })
+          it(`Owner must be able to call withdraw()`, async () => {
+              await concavenft.withdraw()
+          })
+          it(`Calling withdraw should withdraw funds to contract owner`, async () => {
+              await concavenft.unpause()
+              await concavenft.connect(thirdParty).mint(10,{value:ethers.utils.parseEther('30')})
+              expect(await waffle.provider.getBalance(concavenft.address)).to.equal(ethers.utils.parseEther('30'));
+              // const bal = await
+              let b1 = await waffle.provider.getBalance(deployer.address);
+              // console.log(balance)
+              const tx = await concavenft.withdraw()
+              // console.log(tx)
+              let b2 = await waffle.provider.getBalance(deployer.address);
+              const diff = b2 - b1;
+              // console.log(diff)
+              expect(diff).to.be.greaterThan(29000000000000000000);
+              expect(await waffle.provider.getBalance(concavenft.address)).to.equal(ethers.utils.parseEther('0'));
+          })
+      })
+
+      describe("setNotRevealedURI()",() => {
+          beforeEach(async function () {
+              [deployer, thirdParty] = await ethers.getSigners();
+            // Get the ContractFactory and Signers here.
+            // console.log('before')
+            ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
+            concavenft = await ConcaveNFT.deploy(
+                _name,
+                _symbol,
+                _initBaseURI,
+                _initNotRevealedUri
+            );
+          });
+          it(`Third Party must not be able to call setNotRevealedURI()`, async () => {
+              await expect(
+                  concavenft.connect(thirdParty).setNotRevealedURI("test")
+              ).to.be.revertedWith(`Ownable: caller is not the owner'`);
+          })
+          it(`Owner must be able to call setNotRevealedURI()`, async () => {
+              await concavenft.setNotRevealedURI("test")
+          })
+          it(`setNotRevealedURI should succesfully change notRevealedUri`, async () => {
+              await concavenft.setNotRevealedURI("test")
+              expect(await concavenft.notRevealedUri()).to.equal("test")
+          })
+      })
+
+      describe("setBaseURI()",() => {
+          beforeEach(async function () {
+              [deployer, thirdParty] = await ethers.getSigners();
+            // Get the ContractFactory and Signers here.
+            // console.log('before')
+            ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
+            concavenft = await ConcaveNFT.deploy(
+                _name,
+                _symbol,
+                _initBaseURI,
+                _initNotRevealedUri
+            );
+          });
+          it(`Third Party must not be able to call setBaseURI()`, async () => {
+              await expect(
+                  concavenft.connect(thirdParty).setBaseURI("test")
+              ).to.be.revertedWith(`Ownable: caller is not the owner'`);
+          })
+          it(`Owner must be able to call setBaseURI()`, async () => {
+              await concavenft.setBaseURI("test")
+          })
+          it(`setBaseURI should succesfully change baseURI`, async () => {
+              await concavenft.setBaseURI("test")
+              expect(await concavenft.baseURI()).to.equal("test")
+          })
+      })
+
+      describe("setMaxMintAmount()",() => {
+          beforeEach(async function () {
+              [deployer, thirdParty] = await ethers.getSigners();
+            // Get the ContractFactory and Signers here.
+            // console.log('before')
+            ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
+            concavenft = await ConcaveNFT.deploy(
+                _name,
+                _symbol,
+                _initBaseURI,
+                _initNotRevealedUri
+            );
+          });
+          it(`Third Party must not be able to call setMaxMintAmount()`, async () => {
+              await expect(
+                  concavenft.connect(thirdParty).setMaxMintAmount(5)
+              ).to.be.revertedWith(`Ownable: caller is not the owner'`);
+          })
+          it(`Owner must be able to call setMaxMintAmount()`, async () => {
+              await concavenft.setMaxMintAmount(5)
+          })
+          it(`setMaxMintAmount should succesfully change maxMintAmount`, async () => {
+              await concavenft.setMaxMintAmount(5)
+              expect(await concavenft.maxMintAmount()).to.equal(5)
+          })
+      })
+      describe("setPrice()",() => {
+          beforeEach(async function () {
+              [deployer, thirdParty] = await ethers.getSigners();
+            // Get the ContractFactory and Signers here.
+            // console.log('before')
+            ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
+            concavenft = await ConcaveNFT.deploy(
+                _name,
+                _symbol,
+                _initBaseURI,
+                _initNotRevealedUri
+            );
+          });
+          it(`Third Party must not be able to call setPrice()`, async () => {
+              await expect(
+                  concavenft.connect(thirdParty).setPrice(5)
+              ).to.be.revertedWith(`Ownable: caller is not the owner'`);
+          })
+          it(`Owner must be able to call setPrice()`, async () => {
+              await concavenft.setPrice(5)
+          })
+          it(`setPrice should succesfully change price`, async () => {
+              await concavenft.setPrice(5)
+              expect(await concavenft.price()).to.equal(5)
+          })
+      })
+
+      describe("transferOwnership()",() => {
+          beforeEach(async function () {
+              [deployer, thirdParty] = await ethers.getSigners();
+            // Get the ContractFactory and Signers here.
+            // console.log('before')
+            ConcaveNFT = await ethers.getContractFactory("ConcaveNFT");
+            concavenft = await ConcaveNFT.deploy(
+                _name,
+                _symbol,
+                _initBaseURI,
+                _initNotRevealedUri
+            );
+          });
+          it(`Third Party must not be able to call transferOwnership()`, async () => {
+              await expect(
+                  concavenft.connect(thirdParty).transferOwnership(thirdParty.address)
+              ).to.be.revertedWith(`Ownable: caller is not the owner'`);
+          })
+          it(`Owner must be able to call transferOwnership()`, async () => {
+              await concavenft.transferOwnership(thirdParty.address)
+          })
+          it(`transferOwnership should succesfully change owner`, async () => {
+              await concavenft.transferOwnership(thirdParty.address)
+              expect(await concavenft.owner()).to.equal(thirdParty.address)
+          })
+      })
+
+
   })
 
 

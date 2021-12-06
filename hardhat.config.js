@@ -19,11 +19,12 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-//     gasReporter: {
-//     currency: 'USD',
-//     gasPrice: 80,
-//     gasPriceApi:'https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
-// },
+    gasReporter: {
+    currency: 'USD',
+    gasPrice: 100,
+    coinmarketcap:process.env.COINMARKETCAP 
+    // gasPriceApi:'https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
+},
   networks: {
  /* rinkeby: {
     url: "https://eth-rinkeby.alchemyapi.io/v2/123abc123abc123abc123abc123abcde",
