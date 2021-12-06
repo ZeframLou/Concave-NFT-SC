@@ -32,8 +32,13 @@ describe("ConcaveNFT", function () {
     expect(totalSupply).to.equal(4317);
   })
 
-  it("Impersonator is owner of token 0", async () => {
+  it("Account to impersonate is owner of token 0", async () => {
     const oo = await thecolors.ownerOf(0)
+    // console.log({totalSupply})
+    expect(oo).to.equal(colorsOwner);
+  })
+  it("Account to impersonate is owner of token 1", async () => {
+    const oo = await thecolors.ownerOf(1)
     // console.log({totalSupply})
     expect(oo).to.equal(colorsOwner);
   })
