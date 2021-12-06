@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 
 contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
     using Strings for uint256;
@@ -28,6 +29,8 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
         // setBaseURI(_initBaseURI);
         baseURI = _initBaseURI;
         notRevealedUri = _initNotRevealedUri;
+        _pause();
+         // = true;
         // setNotRevealedURI(_initNotRevealedUri);
 
     }
@@ -35,18 +38,22 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
     function mint(uint256 _mintAmount)
         public
         payable
+        whenNotPaused
         returns (uint256)
     {
-        require(!paused(),"contract is paused");
+        // require(!paused(),"contract is paused");
+        require(_mintAmount > 0,"minting zero");
         require(_mintAmount <= maxMintAmount,"minting too many");
         require(totalSupply()+_mintAmount <= maxSupply,"no enough supply");
-        if (totalSupply() > 200) {
-            require(msg.value >= price, "insufficient funds");
+        if (totalSupply() >= 200) {
+            require(msg.value >= price*_mintAmount, "insufficient funds");
         }
-        uint256 newItemId = _tokenIds.current();
-        _mint(msg.sender, newItemId);
-        _tokenIds.increment();
-        return newItemId;
+        for (uint i = 0; i < _mintAmount; i++) {
+            uint256 newItemId = _tokenIds.current();
+            _mint(msg.sender, newItemId);
+            _tokenIds.increment();
+        }
+        return _mintAmount;
     }
 
 
@@ -58,6 +65,13 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
         }
         // string memory baseURI = baseURI();
         return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString(),".json")) : "";
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
+    }
+    function pause() public onlyOwner {
+        _pause();
     }
 
     function reveal() public onlyOwner {
