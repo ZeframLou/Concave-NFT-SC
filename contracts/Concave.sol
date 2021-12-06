@@ -1,4 +1,4 @@
-//// SPDX-INDENTIFIER: MIT
+
 pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -22,7 +22,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
   bool public isPublicSaleActive = false;
   bool public revealed = false;
 
-  address public thecolorsaddress = 0xb27A31f1b0AF2946B7F582768f03239b1eC07c2c; 
+  address public thecolorsaddress = 0x5e17b14ADd6c386305A32928F985b29bbA34Eff5; 
   theColors thecolorscontract = theColors(thecolorsaddress);  
   mapping(uint256 => bool) public hasClaimed;
 
@@ -66,6 +66,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
     require(isPublicSaleActive, "Public sale isn't active yet!");
     for (uint256 i = 1; i <= _mintAmount; i++) {
       _safeMint(msg.sender, getNextUnmintedToken());
+      hasClaimed[getNextUnmintedToken()] = true;
     }
   }
 
@@ -172,7 +173,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
       for (uint i = 0; i < 4317; i++) {
         address tokenOwner = thecolorscontract.ownerOf(i);
         
-        if (user == tokenOwner && !hasClaimed[i]) {
+        if (user == tokenOwner && hasClaimed[i] != true) {
           tokenIds[index] = i;
           index += 1;
         }
