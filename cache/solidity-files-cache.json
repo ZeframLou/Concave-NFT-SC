@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/contracts/Concave.sol": {
-      "lastModificationDate": 1638792139131,
-      "contentHash": "5fbbe6e5ebcf3f23163e499ecaf3be10",
+      "lastModificationDate": 1638803607237,
+      "contentHash": "ec0b6920e22103fd9c219ecf753022cf",
       "sourceName": "contracts/Concave.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -30,14 +30,15 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "hardhat/console.sol",
+        "./colors/INFTOwner.sol"
       ],
       "versionPragmas": [
         ">=0.7.0 <0.9.0"
       ],
       "artifacts": [
-        "ConcaveNFT",
-        "theColors"
+        "ConcaveNFT"
       ]
     },
     "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol": {
@@ -624,6 +625,48 @@
       ],
       "artifacts": [
         "console"
+      ]
+    },
+    "/Users/juanbernardotobar/dev/convexdao/Concave-NFT-SC/contracts/colors/TheSpirals.sol": {
+      "lastModificationDate": 1638802067957,
+      "contentHash": "7035510a0d87270a5dfb6615b6994be6",
+      "sourceName": "contracts/colors/TheSpirals.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
+        "./base64.sol",
+        "./TheColors.sol",
+        "./INFTOwner.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "TheSpirals"
       ]
     }
   }
