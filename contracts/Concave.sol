@@ -142,7 +142,7 @@ contract ConcaveNFT is ERC721Enumerable, Ownable {
         payable(msg.sender).transfer(address(this).balance);
     }
 
-    function getColorsOwnedByUser(address user) public view returns (uint256[] memory tokenIds) {
+    function getColorsOwnedByUser(address user) public view returns (uint256[] memory) {
         uint256[] memory tokenIds = new uint256[](4317);
 
         uint index = 0;
