@@ -18,9 +18,12 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  */
 module.exports = {
   networks: {
-  rinkeby: {
+ /* rinkeby: {
     url: "https://eth-rinkeby.alchemyapi.io/v2/123abc123abc123abc123abc123abcde",
     accounts: [process.env.PRIVATE_KEY]
+  },*/
+  hardhat: {
+    chainId: 1337
   }
 },
   solidity: "0.8.4",
