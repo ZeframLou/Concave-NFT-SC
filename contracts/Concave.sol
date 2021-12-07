@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./colors/IERC721.sol";
+// import "./colors/IERC721.sol";
 // import "hardhat/console.sol";
 
 contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
@@ -20,6 +20,7 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
     uint256 public maxMintAmount = 10;
     uint256 public price = 0.03 ether;
     bool public revealed = false;
+    uint256 colors_quota = 200;
 
     address public constant THE_COLORS = 0x9fdb31F8CE3cB8400C7cCb2299492F2A498330a4;
 
@@ -48,7 +49,7 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
         require(_mintAmount > 0,"minting zero");
         require(_mintAmount <= maxMintAmount,"minting too many");
         require(totalSupply()+_mintAmount <= maxSupply,"no enough supply");
-        if (totalSupply() >= 200) {
+        if (totalSupply() >= colors_quota) {
             require(msg.value >= price*_mintAmount, "insufficient funds");
         } else {
             uint256 colors_balance = IERC721(THE_COLORS).balanceOf(msg.sender);
