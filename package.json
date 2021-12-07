@@ -13,5 +13,8 @@
     "hardhat": "^2.7.0",
     "hardhat-deploy": "^0.9.14",
     "hardhat-gas-reporter": "^1.0.6"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-etherscan": "^2.1.8"
   }
 }

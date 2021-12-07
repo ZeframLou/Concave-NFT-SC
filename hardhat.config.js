@@ -23,23 +23,23 @@ module.exports = {
     gasReporter: {
     currency: 'USD',
     gasPrice: 100,
-    coinmarketcap:process.env.COINMARKETCAP 
+    coinmarketcap:process.env.COINMARKETCAP
     // gasPriceApi:'https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
 },
   networks: {
- rinkeby: {
-    url: "https://eth-rinkeby.alchemyapi.io/v2/iS7JDX3nUScNNSqD83w_rwxiSONw55Pt",
-    accounts: [process.env.PRIVATE_KEY]
-  },
+ // rinkeby: {
+ //    url: "https://eth-rinkeby.alchemyapi.io/v2/iS7JDX3nUScNNSqD83w_rwxiSONw55Pt",
+ //    accounts: [process.env.PRIVATE_KEY]
+ //  },
   // hardhat: {
   //   chainId: 1337
   // },
-  /*hardhat: {
+  hardhat: {
     forking: {
       url: process.env.API_MAINNET,
       blockNumber: 13752124
     }
-  }*/
+  }
 },  etherscan: {
   // Your API key for Etherscan
   // Obtain one at https://etherscan.io/
