@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("hardhat-gas-reporter");
+require("@nomiclabs/hardhat-etherscan");
 require('dotenv').config();
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -26,19 +27,23 @@ module.exports = {
     // gasPriceApi:'https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
 },
   networks: {
- /* rinkeby: {
-    url: "https://eth-rinkeby.alchemyapi.io/v2/123abc123abc123abc123abc123abcde",
+ rinkeby: {
+    url: "https://eth-rinkeby.alchemyapi.io/v2/iS7JDX3nUScNNSqD83w_rwxiSONw55Pt",
     accounts: [process.env.PRIVATE_KEY]
-  },*/
+  },
   // hardhat: {
   //   chainId: 1337
   // },
-  hardhat: {
+  /*hardhat: {
     forking: {
       url: process.env.API_MAINNET,
       blockNumber: 13752124
     }
-  }
+  }*/
+},  etherscan: {
+  // Your API key for Etherscan
+  // Obtain one at https://etherscan.io/
+  apiKey: process.env.API_ETHERSCAN
 },
   solidity: "0.8.4",
 };
