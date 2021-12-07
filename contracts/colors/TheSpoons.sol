@@ -10,6 +10,7 @@ import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import './base64.sol';
 import './TheColors.sol';
 import './INFTOwner.sol';
+import './ITheSpoonsSVG.sol';
 
 
 contract TheSpirals is ERC721Enumerable, Ownable {
