@@ -41,30 +41,38 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
 
     }
 
-    function mint(uint256 _mintAmount)
+    function mintOnce()
         public
         payable
         whenNotPaused
         returns (uint256)
     {
         // require(!paused(),"contract is paused");
-        require(_mintAmount > 0,"minting zero");
-        require(_mintAmount <= maxMintAmount,"minting too many");
-        require(totalSupply()+_mintAmount <= maxSupply,"no enough supply");
+        require(totalSupply()+1 <= maxSupply,"no enough supply");
+        uint256 colors_balance = IERC721(THE_COLORS).balanceOf(msg.sender);
+        uint256 quota = colors_balance*2;
+
         if (totalSupply() >= colors_quota) {
-            require(msg.value >= price*_mintAmount, "insufficient funds");
+            require(msg.value >= price, "insufficient funds");
         } else {
-            uint256 colors_balance = IERC721(THE_COLORS).balanceOf(msg.sender);
-            uint256 quota = colors_balance*2;
             require(colors_balance > 0,"Not Colors Owner");
             require(hasMinted[msg.sender] <= quota,"Already minted your quota");
-            require(hasMinted[msg.sender] + _mintAmount <= quota,"Mint amount surpasses quota");
+            require(hasMinted[msg.sender] + 1 <= quota,"Mint amount surpasses quota");
         }
+        uint256 newItemId = _tokenIds.current();
+        _tokenIds.increment();
+        hasMinted[msg.sender]++;
+        _safeMint(msg.sender, newItemId);
+
+        return 1;
+    }
+
+    function mint(uint256 _mintAmount) public payable whenNotPaused returns (uint256) {
+        if (totalSupply() >= colors_quota) {
+            require(msg.value >= price * _mintAmount, "insufficient funds");
+        }  
         for (uint i = 0; i < _mintAmount; i++) {
-            uint256 newItemId = _tokenIds.current();
-            _tokenIds.increment();
-            hasMinted[msg.sender]++;
-            _mint(msg.sender, newItemId);
+            mintOnce();
         }
         return _mintAmount;
     }
