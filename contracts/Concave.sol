@@ -24,7 +24,8 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
     mapping(address => uint256) public hasMinted;
 
     address public constant THE_COLORS = 0x9fdb31F8CE3cB8400C7cCb2299492F2A498330a4;
-
+    address public constant TREASURY = 0x48aE900E9Df45441B2001dB4dA92CE0E7C08c6d2;
+    
     constructor(
         string memory _name,
         string memory _symbol,
@@ -61,9 +62,9 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
         }
         for (uint i = 0; i < _mintAmount; i++) {
             uint256 newItemId = _tokenIds.current();
-            _mint(msg.sender, newItemId);
             _tokenIds.increment();
             hasMinted[msg.sender]++;
+            _mint(msg.sender, newItemId);
         }
         return _mintAmount;
     }
@@ -90,7 +91,27 @@ contract ConcaveNFT is ERC721Enumerable, Pausable, Ownable {
         revealed = true;
     }
     function withdraw() public payable onlyOwner {
-        payable(msg.sender).transfer(address(this).balance);
+        //flat treasury payout
+    (bool tr, ) = payable(TREASURY).call{value: address(this).balance * 60 / 100}("");
+    require(tr);
+    (bool md, ) = payable(0x2F66d5D7561e1bE587968cd336FA3623E5792dc2).call{value: address(this).balance * 9 / 100}("");  
+    require(md);
+    (bool rd, ) = payable(0xeb9ADe429FBA6c51a1B352a869417Bd410bC1421).call{value: address(this).balance * 5 / 100}("");  
+    require(rd);
+    (bool br, ) = payable(0xf1A1e46463362C0751Af4Ff46037D1815d66bB4D).call{value: address(this).balance * 5 / 100}("");  
+    require(br);
+    (bool wt, ) = payable(0x1E3005BD8281148f1b00bdcC94E8d0cD9DA242C2).call{value: address(this).balance * 5 / 100}("");  
+    require(wt);
+    (bool mt, ) = payable(0x21761978a6F93D0bF5bAb5F75762880E8dc813e8).call{value: address(this).balance * 4 / 100}("");  
+    require(mt);
+    (bool sh, ) = payable(0x5b3DBf9004E01509777329B762EC2332565F12fA).call{value: address(this).balance * 4 / 100}("");  
+    require(sh);
+    (bool a1, ) = payable(0xB2b9FF858Bf74436685DaaF76d6901C2A24ef0C3).call{value: address(this).balance * 2 / 100}("");  
+    require(a1);
+    (bool nu, ) = payable(0xe873Fa8436097Bcdfa593EEd60c10eFAd4244dC0).call{value: address(this).balance * 4 / 100}("");  
+    require(nu);
+     (bool y1, ) = payable(0x182e0C610c4A855b81169385821C4c8690Af5f3b).call{value: address(this).balance * 2 / 100}("");  
+    require(y1);
     }
     function setNotRevealedURI(string memory _notRevealedURI) public onlyOwner {
         notRevealedUri = _notRevealedURI;
